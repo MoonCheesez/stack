@@ -1,3 +1,46 @@
+"""
+IMPORTANT: When giving this out, please change the name.
+"""
+
+"""
+MIT License
+
+Copyright (c) 2016 MoonCheesez
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
+
+"""
+Current features of the program:
+Fills out every part of the google form for you.
+Able to click on the "next" or "submit" button and tell you whether it is
+successful
+Able to tell you which questions have errors when trying to submit
+
+What it CANNOT do:
+Cannot fill out dropdowns.
+Cannot gurantee that the range labels in the radio scale is given left and
+right. So far, this seems to work however, there is no concrete proof.
+Cannot get the title and description of the form.
+Cannot login for you and I intend to keep it that way. (for security reasons)
+"""
+
 from selenium.common.exceptions import NoSuchElementException
 
 class Question(object):
@@ -86,7 +129,6 @@ class Question_List_Select(Question):
 	select(option)
 	"""
 	def __init__(self, webelement, question_type, driver):
-		# TODO: Add description of left and right for radio scale
 		if question_type not in ["radiolist", "radioscale", "checkbox",
 		  "dropdown"]:
 			raise TypeError("Wrong Question Type. Question Type Given: " +
@@ -94,6 +136,7 @@ class Question_List_Select(Question):
 
 		super(Question_List_Select, self).__init__(webelement, question_type)
 		self.options = []
+		self.range_labels = []
 		self.driver = driver
 
 		options_xpath = None
@@ -108,6 +151,11 @@ class Question_List_Select(Question):
 			for i in self.webelement.find_elements_by_xpath(
 			  './/div[@role="option"]/content/..')[1:]:
 				self.options.append(i.get_attribute("data-value"))
+
+		if self.question_type == "radioscale":
+			range_labels_xpath = './/div[@class="freebirdMaterialScalecontentRangeLabel"]'
+			for i in self.webelement.find_elements_by_xpath(range_labels_xpath):
+				self.range_labels.append(i.text)
 
 		if not options_xpath:
 			return
@@ -386,6 +434,8 @@ class Form(object):
 		self.driver = webdriver.Firefox()
 		# Setup
 		self.driver.get(url)
+		# Allow user to login
+		raw_input("Ready? ")
 		self.reload_questions()
 		
 	def reload_questions(self):
@@ -420,23 +470,6 @@ class Form(object):
 	def quit(self):
 		self.driver.quit()
 
-"""
-from selenium import webdriver
-
-google_form_url = "https://docs.google.com/a/s2014.sst.edu.sg/forms/d/e/1FAIpQLScw10fAih4wUP45kl1TIUnGYbVCsLtgFvBx8wYOb_pom1QZIw/viewform"
-
-driver = webdriver.Firefox()
-driver.get(google_form_url)
-
-def get_questions(driver):
-	questions_xpath = './/form//div[@class="freebirdFormviewerViewItemList"]/div'
-	return driver.find_elements_by_xpath(questions_xpath)
-
-for i in get_questions(driver):
-
-
-driver.quit()
-"""
 from selenium import webdriver
 
 url = "https://docs.google.com/a/s2014.sst.edu.sg/forms/d/e/1FAIpQLScw10fAih4wUP45kl1TIUnGYbVCsLtgFvBx8wYOb_pom1QZIw/viewform"
