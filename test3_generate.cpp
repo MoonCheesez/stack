@@ -7,9 +7,9 @@
 // Tricky Cases - 2m
 //
 // Average time needed to produce file of N:
-// N = 10      - 0.004s
-// N = 10000   - 0.081s
-// N = 1000000 - 7.668s
+// N = 10      - 0.002s
+// N = 10000   - 0.081s too long
+// N = 1000000 - 7.668s too long
 
 // File manipulation
 #include <fstream>
@@ -63,7 +63,7 @@ int main() {
     const char qout_name[] = "qout.txt";
     const char aout_name[] = "aout.txt";
     const char tmp_name[]  = "tmp.txt";
-    const long lim         = 10;
+    const long lim         = 10000;
 
     // Initialize random
     srand(time(NULL));
@@ -73,7 +73,7 @@ int main() {
     tmp.open(tmp_name, ios::out | ios::trunc | ios::in);
 
     // Create test cases
-    long number_of_papers = rand() % lim + 1;
+    long number_of_papers = lim;//rand() % lim + 1;
     unsigned long paper_sum = 0;
     vector<unsigned long> paper_sum_constants;
     for (int i=0; i<number_of_papers; i++) {

@@ -5,6 +5,12 @@
 // 1 <= S <= 10000;Q = 1000     - 10m
 // 1 <= S <= 1000000;Q = 100000 - 2m
 // Tricky Cases                 - 2m
+//
+// Average time taken to produce each case
+// S, Q = 10         - 0.004s
+// S, Q = 1000       - 0.025s
+// S, Q = 1000000    - too long to measure
+
 
 // File manipulation
 #include <fstream>
@@ -52,7 +58,7 @@ int main() {
      */
     const char qout_name[] = "qout.txt";
     const char aout_name[] = "aout.txt";
-    const long lim         = 1000;
+    const long lim         = 10;
     
     // Initialize random
     srand(time(NULL));
@@ -64,8 +70,8 @@ int main() {
     ofstream aout;
     aout.open(aout_name, ios::out | ios::trunc);
 
-    const long S = 10000;//rand() % lim + 1;
-    const long Q = 9999;//rand() % S + 1;
+    const long S = rand() % lim + 1;
+    const long Q = rand() % S + 1;
 
     qout << S << endl << Q << endl;
 
