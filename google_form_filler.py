@@ -435,7 +435,7 @@ class Form(object):
 		# Setup
 		self.driver.get(url)
 		# Allow user to login
-		raw_input("Ready? ")
+		input("Ready? ")
 		self.reload_questions()
 		
 	def reload_questions(self):
