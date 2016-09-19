@@ -34,7 +34,6 @@ successful
 Able to tell you which questions have errors when trying to submit
 
 What it CANNOT do:
-Cannot fill out dropdowns.
 Cannot gurantee that the range labels in the radio scale is given left and
 right. So far, this seems to work however, there is no concrete proof.
 Cannot get the title and description of the form.
