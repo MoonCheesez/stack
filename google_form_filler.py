@@ -42,6 +42,7 @@ Cannot login for you and I intend to keep it that way. (for security reasons)
 """
 
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.action_chains import ActionChains
 
 class Question(object):
 	"""The data structure for a question.
@@ -175,8 +176,28 @@ class Question_List_Select(Question):
 		elif self.question_type == "checkbox":
 			option_xpath = './/div[@data-value="{0}"]'
 		else:
-			# The dropdown can only work by removing and adding
-			# classes to the element
+			# Select dropdown by clicking on it, then press down arrow until
+			# item index.
+
+			# Element to click toggle open and close
+			toggle_open_close_xpath = './/div[@class="' \
+			'docssharedWizSelectPaperselectOptionList"]/..'
+
+			toggle_open_close = self.webelement.find_element_by_xpath(
+				toggle_open_close_xpath)
+			
+			# Open dropdown
+			ActionChains(self.driver).move_to_element(
+				toggle_open_close).click()
+
+			# Go to option
+			for i in range(self.options.index(option)):
+				ActionChains(self.driver).move_to_element(
+				toggle_open_close).send_keys(Keys.ARROW_DOWN)
+
+			# Select option
+			ActionChains(self.driver).move_to_element(
+				toggle_open_close).send_keys(Keys.RETURN)			
 
 			# Get the selected element
 			selected = self.webelement.find_element_by_xpath(
@@ -435,7 +456,7 @@ class Form(object):
 		# Setup
 		self.driver.get(url)
 		# Allow user to login
-		input("Ready? ")
+		raw_input("Ready? ")
 		self.reload_questions()
 		
 	def reload_questions(self):
@@ -471,6 +492,7 @@ class Form(object):
 		self.driver.quit()
 
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 
 url = "https://docs.google.com/a/s2014.sst.edu.sg/forms/d/e/1FAIpQLScw10fAih4wUP45kl1TIUnGYbVCsLtgFvBx8wYOb_pom1QZIw/viewform"
 form = Form(url)
