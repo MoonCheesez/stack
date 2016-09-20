@@ -1,3 +1,8 @@
+from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
+
 """
 IMPORTANT: When giving this out, please change the name.
 """
@@ -40,11 +45,10 @@ Cannot get the title and description of the form.
 Cannot login for you and I intend to keep it that way. (for security reasons)
 """
 
-from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.common.action_chains import ActionChains
 
 class Question(object):
     """The data structure for a question.
+
     Arguments:
     webelement    - The question's web element.
     question_type - The type of the question.
@@ -84,13 +88,13 @@ class Question(object):
 
         # Create xpaths to each of the key elements in the question
         description_xpath = './/div[@class="' \
-        'freebirdFormviewerViewItemsItemItemTitleContainer"]/div[@class="' \
-        'freebirdFormviewerViewItemsItemItemHelpText"]'
+            'freebirdFormviewerViewItemsItemItemTitleContainer"]/div[@class=' \
+            '"freebirdFormviewerViewItemsItemItemHelpText"]'
         title_xpath = './/div[@class="' \
-        'freebirdFormviewerViewItemsItemItemTitleContainer"]/div[@class="' \
-        'freebirdFormviewerViewItemsItemItemTitle"]'
+            'freebirdFormviewerViewItemsItemItemTitleContainer"]/div[@class=' \
+            '"freebirdFormviewerViewItemsItemItemTitle"]'
         error_xpath = './/div[@class="' \
-        'freebirdFormviewerViewItemsItemErrorMessage"]'
+            'freebirdFormviewerViewItemsItemErrorMessage"]'
 
         # Get the elements from each of the xpaths above
         self.title = webelement.find_element_by_xpath(title_xpath).text
@@ -102,8 +106,9 @@ class Question(object):
     def check_errors(self):
         """Rechecks itself for error messages and stores them in self.error"""
         error_xpath = './/div[@class="' \
-        'freebirdFormviewerViewItemsItemErrorMessage"]'
+            'freebirdFormviewerViewItemsItemErrorMessage"]'
         self.error = webelement.find_element_by_xpath(error_xpath).text
+
 
 class Question_Text(Question):
     """Class for text fields. Text fields include long answer text and short
@@ -128,15 +133,16 @@ class Question_Text(Question):
         # Validate the question type
         if question_type not in ["stext", "ltext"]:
             raise TypeError("Wrong Question Type. Question Type Given: " +
-                question_type)
+                            question_type)
 
+        # Initialize
         super(Question_Text, self).__init__(webelement, question_type)
         self.text = ""
 
     def setText(self, text):
         """Sets the text inside the text field and resets self.text to that
         text.
-        
+
         Arguments:
         text        - The new text to set to.
         """
@@ -145,7 +151,7 @@ class Question_Text(Question):
             text_xpath = './/input[@type="text"]'
         else:
             text_xpath = './/textarea'
-        
+
         # Clear and type the new text into the xpath
         self.webelement.find_element_by_xpath(text_xpath).clear()
         self.webelement.find_element_by_xpath(text_xpath).send_keys(
@@ -153,6 +159,7 @@ class Question_Text(Question):
 
         # Set the self.text to the typed text
         self.text = text
+
 
 class Question_List_Select(Question):
     """Class for questions that include a list of options to be selected from.
@@ -169,23 +176,23 @@ class Question_List_Select(Question):
                       scale.
     driver          - The driver passed.
 
+    Functions:
+    select          - Select an option.
+
     Accepted Types:
     Radio Button List   - radiolist
     Radio Button Scale  - radioscale
     Checkbox            - checkbox
     Dropdown            - dropdown
-
-    Functions:
-    select          - Select an option.
     """
     def __init__(self, webelement, question_type, driver):
         # Validate the question type
         if question_type not in ["radiolist", "radioscale", "checkbox",
-          "dropdown"]:
+                                 "dropdown"]:
             raise TypeError("Wrong Question Type. Question Type Given: " +
-                question_type)
+                            question_type)
 
-        # Initialize 
+        # Initialize
         super(Question_List_Select, self).__init__(webelement, question_type)
         self.options = []
         self.range_labels = []
@@ -207,8 +214,10 @@ class Question_List_Select(Question):
 
         # Add range labels for radio scale
         if self.question_type == "radioscale":
-            range_labels_xpath = './/div[@class="freebirdMaterialScalecontentRangeLabel"]'
-            for i in self.webelement.find_elements_by_xpath(range_labels_xpath):
+            range_labels_xpath = './/div[@class="' \
+                    'freebirdMaterialScalecontentRangeLabel"]'
+            for i in self.webelement.find_elements_by_xpath(
+                    range_labels_xpath):
                 self.range_labels.append(i.text)
 
         # Stop here for dropdowns
@@ -242,11 +251,17 @@ class Question_List_Select(Question):
 
             # Xpath to open close element
             toggle_open_close_xpath = './/div[@class="' \
-            'docssharedWizSelectPaperselectOptionList"]/..'
+                'docssharedWizSelectPaperselectOptionList"]/..'
             # Get open close element
             toggle_open_close = self.webelement.find_element_by_xpath(
                 toggle_open_close_xpath)
-            
+
+            # Reset dropdown
+            ActionChains(self.driver).move_to_element(
+                toggle_open_close).click()
+            ActionChains(self.driver).move_to_element(
+                toggle_open_close).click()
+
             # Open dropdown
             ActionChains(self.driver).move_to_element(
                 toggle_open_close).click()
@@ -254,19 +269,20 @@ class Question_List_Select(Question):
             # Go to option
             for i in range(self.options.index(option)):
                 ActionChains(self.driver).move_to_element(
-                toggle_open_close).send_keys(Keys.ARROW_DOWN)
+                    toggle_open_close).send_keys(Keys.ARROW_DOWN)
 
             # Select option
             ActionChains(self.driver).move_to_element(
-                toggle_open_close).send_keys(Keys.RETURN) 
+                toggle_open_close).send_keys(Keys.RETURN)
 
         # return if type is dropdown
         if not option_xpath:
             return
-        
+
         # Click on the element
         self.webelement.find_element_by_xpath(
             option_xpath.format(option)).click()
+
 
 class Question_DateTime(Question):
     """Class for date fields and their variations.
@@ -281,7 +297,7 @@ class Question_DateTime(Question):
     year            - The current value of year. Only created when question
                       type is either datey or dateyt. Does not check on
                       creation.
-    hour            - The current value of hour. Only created when question 
+    hour            - The current value of hour. Only created when question
                       type is time, dateyt or datet. Does not check on
                       creation.
     minute          - The current value of hour. Only created when the
@@ -290,6 +306,12 @@ class Question_DateTime(Question):
                       conditions in hour is met. Does not check on creation.
     driver          - The driver passed.
 
+    Functions:
+    setDay                  - Set the day of the time field.
+    setMonth                - Set the month of the time field.
+    setYear                 - Set the year of the time field.
+    setTime                 - Set the hours, minutes and am or pm of the time
+                              field.
 
     Accepted Types:
     Date (no year & time)   - date
@@ -297,19 +319,12 @@ class Question_DateTime(Question):
     Date (time only)        - datet
     Date (year & time)      - dateyt
     Time (normal)           - time
-
-    Functions:
-    setDay                  - Set the day of the time field.
-    setMonth                - Set the month of the time field.
-    setYear                 - Set the year of the time field.
-    setTime                 - Set the hours, minutes and am or pm of the time
-                              field.
     """
     def __init__(self, webelement, question_type, driver):
         # Validate the question type
         if question_type not in ["date", "datey", "datet", "dateyt", "time"]:
             raise TypeError("Wrong Question Type. Question Type Given: " +
-                question_type)
+                            question_type)
 
         # Initialize
         super(Question_DateTime, self).__init__(webelement, question_type)
@@ -329,7 +344,7 @@ class Question_DateTime(Question):
     def setDay(self, day):
         """Set the day value in the time field and resets the self.day value to
         that value.
-        
+
         Arguments:
         day         - The value of the day to set.
         """
@@ -340,14 +355,14 @@ class Question_DateTime(Question):
         # Clear and type the new day value into the element
         day_element.clear()
         day_element.send_keys(day)
-        
+
         # Reset self.day value
         self.day = day
 
     def setMonth(self, month):
         """Set the month value in the time field and resets the self.month
         value to that value.
-        
+
         Arguments:
         month       - The value of the day to set.
         """
@@ -365,7 +380,7 @@ class Question_DateTime(Question):
     def setYear(self, year):
         """Set the year value in the time field and resets the self.year
         value to that value.
-        
+
         Arguments:
         year        - The value of the day to set.
         """
@@ -383,7 +398,7 @@ class Question_DateTime(Question):
     def setTime(self, hour, minute, am_pm):
         """Set the hour, minute, am_pm value in the time field and resets the
         self.hour, self.minute and self.am_pm values respectively.
-        
+
         Arguments:
         hour        - The value of the hour to set.
         minute      - The value of the minute to set.
@@ -408,34 +423,33 @@ class Question_DateTime(Question):
         elements = self.webelement.find_elements_by_xpath(xpath)
 
         for e in elements:
-            try:
-                input_element = e.find_element_by_xpath(
-                    ".//input[@aria-label]") 
-                if input_element.get_attribute("aria-label") == "Hour":
-                    input_element.clear()
-                    input_element.send_keys(hour)
-                    self.hour = hour
-                elif input_element.get_attribute("aria-label") == "Minute":
-                    # Minute
-                    input_element.clear()
-                    input_element.send_keys(minute)
-                    self.minute = minute
-                else:
-                    raise NoSuchElementException
+            input_element = e.find_element_by_xpath(
+                ".//input[@aria-label]")
+            if input_element.get_attribute("aria-label") == "Hour":
+                # Element is hour element
+                # Clear and type the new year into the element
+                input_element.clear()
+                input_element.send_keys(hour)
 
-            except NoSuchElementException:
-                # Dropdown
-                # TODO
-                # Select dropdown by clicking on it, then press down arrow
-                # until item index.
+                # Reset the self.hour value
+                self.hour = hour
+            elif input_element.get_attribute("aria-label") == "Minute":
+                # Element is minute element
+                # Clear and type the new minute into the element
+                input_element.clear()
+                input_element.send_keys(minute)
 
+                # Reset the self.minute value
+                self.minute = minute
+            else:
+                # Element is AM_PM dropdown element
                 # Xpath to open close element
                 toggle_open_close_xpath = './/div[@class="' \
-                'docssharedWizSelectPaperselectOptionList"]/..'
+                    'docssharedWizSelectPaperselectOptionList"]/..'
                 # Get open close element
                 toggle_open_close = self.webelement.find_element_by_xpath(
                     toggle_open_close_xpath)
-                
+
                 # Reset dropdown
                 ActionChains(self.driver).move_to_element(
                     toggle_open_close).click()
@@ -449,74 +463,116 @@ class Question_DateTime(Question):
                 # Go to option
                 for i in range(self.options.index(option)):
                     ActionChains(self.driver).move_to_element(
-                    toggle_open_close).send_keys(Keys.ARROW_DOWN)
+                        toggle_open_close).send_keys(Keys.ARROW_DOWN)
 
                 # Select option
                 ActionChains(self.driver).move_to_element(
-                    toggle_open_close).send_keys(Keys.RETURN) 
+                    toggle_open_close).send_keys(Keys.RETURN)
 
+                # Reset the self.am_pm value
                 self.am_pm = am_pm
 
-class Question_Duration(Question):
-    """Class for duration
-    Type:
-    Time (duration)        - duration
-    
-    Actions:
-    setDuration(hour, minute, second)
-    """
-    def __init__(self, webelement, question_type):
-        if question_type != "duration":
-            raise TypeError("Wrong Question Type. Question Type Given: " +
-                question_type)
 
+class Question_Duration(Question):
+    """Class for time duration.
+    Arguments:
+    webelement      - The web element of the question.
+
+    Instance variables:
+    hour            - The current value of hour. Does not check on creation.
+    minute          - The current value of minute. Does not check on creation.
+    second          - The current value of second. Does not check on creation.
+
+    Functions:
+    setDuration     - Set the hour, minute and second of the time field.
+
+    Accepted Type:
+    Time (duration)         - duration
+    """
+    def __init__(self, webelement):
+        # Initialize
         super(Question_Duration, self).__init__(webelement, question_type)
         self.hour = -1
         self.minute = -1
         self.second = -1
 
     def setDuration(self, hour, minute, second):
+        """Set the hour, minute, second values in the time field and resets
+        self.hour, self.minute, self.second.
+
+        Arguments:
+        hour        - The value of hour to set.
+        minute      - The value of minute to set.
+        second      - The value of second to set.
+        """
+        # Get the time field elements
         elements = self.webelement.find_elements_by_xpath(
             './/input[@aria-label]')
         for e in elements:
+            # Get the aria-label that indicates the type of field
             hms = e.get_attribute("aria-label")
+
             if hms == "Hours":
+                # The element is a field for hours
+                # Clear and type the new hours into the element
                 e.clear()
                 e.send_keys(hour)
+
+                # Reset the self.hour value
                 self.hour = hour
             elif hms == "Minutes":
+                # The element is a field for minutes
+                # Clear and type the new minutes into the element
                 e.clear()
                 e.send_keys(minute)
+
+                # Reset the self.minute value
                 self.minute = minute
             elif hms == "Seconds":
+                # The element is a field for seconds
+                # Clear and type the new seconds into the element
                 e.clear()
                 e.send_keys(second)
+
+                # Reset the self.second value
                 self.second = second
 
+
 def question_type(question):
+    """Determines the type of the question"""
+
+    # Function to test existence of any web elements at the given xpath
     def test(question, xpath):
+        """Returns True if web element at xpath Found else False."""
         try:
             question.find_element_by_xpath(xpath)
             return True
         except NoSuchElementException:
             return False
 
-    """Determines the type of the question"""
+    # Text Questions
     stext = './/input[@type="text" and not(@role="combobox")]'
     ltext = './/textarea'
+
+    # List  Select Questions
     radio_list = './/content[@role="presentation"]/div[not(@class=' \
-    '"freebirdMaterialScalecontentContainer")]'
+        '"freebirdMaterialScalecontentContainer")]'
     radio_scale = './/content[@role="presentation"]/div[@class=' \
-    '"freebirdMaterialScalecontentContainer"]'
+        '"freebirdMaterialScalecontentContainer"]'
     checkbox = './/div[@role="group"]'
     dropdown = './/div[@role="presentation"]/div'
-    date = './/div[@class=' \
-    '"freebirdFormviewerViewItemsDateDateTimeInputs"]'
-    time = './/div[@class="freebirdFormviewerViewItemsTimeTimeInputs"]' \
-    '/div[@aria-label="AM or PM"]'
-    duration = './/div[@class=' \
-    '"freebirdFormviewerViewItemsTimeTimeInputs"]//input[@aria-label="Hours"]'
 
+    # Datetime Questions
+    date = './/div[@class=' \
+        '"freebirdFormviewerViewItemsDateDateTimeInputs"]'
+    time = './/div[@class="freebirdFormviewerViewItemsTimeTimeInputs"]' \
+        '/div[@aria-label="AM or PM"]'
+
+    # Duration Questions
+    duration = './/div[@class="freebirdFormviewerViewItemsTimeTimeInputs"]' \
+        '//input[@aria-label="Hours"]'
+
+    # Return accordingly
     if test(question, stext):
         return "stext"
     elif test(question, ltext):
@@ -532,40 +588,77 @@ def question_type(question):
     elif test(question, duration):
         return "duration"
 
+    # Check whether the question is a dropdown or a date type
     qt = ""
     if test(question, dropdown):
         qt = "dropdown"
     if test(question, date):
         qt = "date"
         if question.find_element_by_xpath(date + "/div").get_attribute(
-            "data-includeyear"):
+                "data-includeyear"):
             qt += "y"
         if len(question.find_elements_by_xpath(date + "/div")) == 2:
             qt += "t"
 
+    # Return question type
     if not qt:
         return False
     else:
         return qt
 
-class Form(object):
 
-    def __init__(self, url):
+class Form(object):
+    """Class for handling the whole Google form
+
+    Arguments:
+    url             - The URL of the Google form.
+
+    Instance variables:
+    url             - The URL of the Google form passed.
+    driver          - The selenium webdriver of the form.
+    questions       - The questions in the current page of the Google form.
+                      Each item in the list subclasses Question.
+    prompt          - Prompts the user before loading the question. (Default to
+                      False)
+
+    Functions:
+    reload_questions    - Reload the questions in the Google form. This is done
+                          automatically when the class is instantiated (unless
+                          prompt is not False) and when `submit` is called.
+    submit              - Either submits or clicks on the next page button.
+    """
+
+    def __init__(self, url, prompt=False):
+        # Initialize
         self.url = url
+
+        # Create selenium webdriver
         self.driver = webdriver.Firefox()
-        # Setup
+        # Go to url
         self.driver.get(url)
-        # Allow user to login
-        raw_input("Ready? ")
+
+        # Prompt if needed
+        if prompt:
+            raw_input(prompt)
+
+        # Populate self.questions
         self.reload_questions()
-        
+
     def reload_questions(self):
-        # Get questions
-        questions_xpath = './/form//div[@class="' \
-        'freebirdFormviewerViewItemList"]/div'
+        """Reloads the questions in the current page of the webdriver and
+        resets self.questions."""
+        # Reset self.questions
         self.questions = []
+
+        # Set the general xpath to all questions
+        questions_xpath = './/form//div[@class="' \
+            'freebirdFormviewerViewItemList"]/div'
+
+        # Create the necessary classes for each question and add them to
+        # self.questions.
         for question in self.driver.find_elements_by_xpath(questions_xpath):
             qt = question_type(question)
+            # Sort the question type
             if qt in ["stext", "ltext"]:
                 self.questions.append(Question_Text(question, qt))
             elif qt in ["radiolist", "radioscale", "dropdown", "checkbox"]:
@@ -577,11 +670,22 @@ class Form(object):
             elif qt == "duration":
                 self.questions.append(Question_Duration(question, qt))
 
-    def submit(self):
-        submit_xpath = './/span[@class="quantumWizButtonPaperbuttonLabel"' \
-        ' and (text()="Next" or text()="Submit")]'
+            # Other "questions" are extra items such as pictures, videos and
+            # information text.
 
+            # TODO Add extras
+
+    def submit(self):
+        """Submits or moves the form to the next page by clicking on the submit
+        or next button. Returns False if there is an error, True otherwise."""
+        # Set the xpath to the submit or next button
+        submit_xpath = './/span[@class="quantumWizButtonPaperbuttonLabel"' \
+            ' and (text()="Next" or text()="Submit")]'
+
+        # Click on the button
         self.driver.find_element_by_xpath(submit_xpath).click()
+
+        # Reload and check the questions for error messages
         self.reload_questions()
         for i in self.questions:
             if i.error != "":
@@ -589,10 +693,5 @@ class Form(object):
         return True
 
     def quit(self):
+        """Quit the selenium webdriver."""
         self.driver.quit()
-
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-
-url = "https://docs.google.com/a/s2014.sst.edu.sg/forms/d/e/1FAIpQLScw10fAih4wUP45kl1TIUnGYbVCsLtgFvBx8wYOb_pom1QZIw/viewform"
-form = Form(url)
