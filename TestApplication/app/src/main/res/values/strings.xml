@@ -1,0 +1,15 @@
+<resources>
+    <!-- Application Manifest -->
+    <string name="app_name">Test Application</string>
+
+    <!-- Layout - content_main.xml -->
+    <string name="title">Welcome!</string>
+    <string name="name_textview">Name:</string>
+    <string name="value_textview">Value:</string>
+    <string name="name_placeholder">Enter your name here</string>
+    <string name="value_placeholder">Enter your value here</string>
+    <string name="submit_button">Submit</string>
+
+    <!-- Layout - content_database_view.xml -->
+    <string name="title_activity_database_view">Database Content</string>
+</resources>
