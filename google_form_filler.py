@@ -668,7 +668,7 @@ class Form(object):
                 self.questions.append(
                     Question_DateTime(question, qt, self.driver))
             elif qt == "duration":
-                self.questions.append(Question_Duration(question, qt))
+                self.questions.append(Question_Duration(question))
 
             # Other "questions" are extra items such as pictures, videos and
             # information text.
