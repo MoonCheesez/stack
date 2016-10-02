@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/content_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/activity_main"
+    tools:context="com.mooncheesez.testapplication.MainActivity"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="20sp"
+        android:text="@string/title" />
+
+    <GridLayout
+        android:id="@+id/gridLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:rowCount="2"
+        android:columnCount="3">
+
+        <TextView
+            android:id="@+id/nameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_column="0"
+            android:layout_row="0"
+            android:layout_columnSpan="1"
+            android:textSize="18sp"
+            android:text="@string/name_textview" />
+
+        <EditText
+            android:id="@+id/nameTextField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:layout_gravity="fill_horizontal"
+            android:layout_column="1"
+            android:layout_row="0"
+            android:layout_columnSpan="2"
+            android:hint="@string/name_placeholder" />
+
+        <TextView
+            android:id="@+id/valueTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_row="1"
+            android:layout_columnSpan="1"
+            android:textSize="18sp"
+            android:text="@string/value_textview" />
+        <EditText
+            android:id="@+id/valueTextField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:layout_gravity="fill_horizontal"
+            android:layout_column="1"
+            android:layout_row="1"
+            android:layout_columnSpan="2"
+            android:hint="@string/value_placeholder" />
+    </GridLayout>
+
+    <Button
+        android:text="@string/submit_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:id="@+id/submit"
+        android:layout_below="@+id/gridLayout"
+        android:layout_alignParentEnd="true"
+        style="@style/Widget.AppCompat.Button.Colored" />
+
+</RelativeLayout>
