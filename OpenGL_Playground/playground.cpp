@@ -10,8 +10,7 @@
 #include <glm/glm.hpp>
 using namespace glm;
 
-#include "common/shader.hpp"
-//#include "common/shader.cpp"
+#include <common/shader_v2.hpp>
 
 int main() {
     // Initialize GLFW
@@ -25,7 +24,8 @@ int main() {
     // Set to OpenGL 3.3
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
+    // Extra for compatibility with MacOS
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     // No old OpenGL
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
@@ -71,7 +71,7 @@ int main() {
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
     // Create and compile GLSL program from shaders
-    GLuint programID = LoadShaders("SimpleVertexShader.vertexshader",
+    GLuint programID = loadShaders("SimpleVertexShader.vertexshader",
             "SimpleFragmentShader.fragmentshader");
 
     do {

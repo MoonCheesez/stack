@@ -27,13 +27,16 @@ elseif(UNIX)
 endif()
 
 
-include_directories(${inc_dirs})
+include_directories(
+    ${inc_dirs}
+    .
+)
 
 add_executable(OpenGL_Playground
     playground.cpp
 
-    common/shader.cpp
-    common/shader.hpp
+    common/shader_v2.hpp
+    common/shader_v2.cpp
 
     SimpleVertexShader.vertexshader
     SimpleFragmentShader.fragmentshader
