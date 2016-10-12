@@ -1,13 +1,33 @@
 cmake_minimum_required (VERSION 2.6)
 project(OpenGL_Playground)
 
+# Find packages needed
 find_package(OpenGL REQUIRED)
-find_package(glfw3 REQUIRED)
 find_package(GLEW REQUIRED)
+# Only Mac needs this
+if (APPLE)
+    find_package(glfw3 REQUIRED)
+endif()
 
-include_directories(
-    /usr/local/include
-)
+# This happens to be the configuration for my mac and linux system
+if(APPLE)
+    set(inc_dirs
+        /usr/local/include
+    )
+    set(lnk_dirs
+        /usr/local/lib
+    )
+elseif(UNIX)
+    set(inc_dirs
+        /usr/include
+    )
+    set(lnk_dirs
+        /usr/lib
+    )
+endif()
+
+
+include_directories(${inc_dirs})
 
 add_executable(OpenGL_Playground
     playground.cpp
@@ -20,7 +40,7 @@ add_executable(OpenGL_Playground
 )
 
 link_libraries(
-    /usr/local/lib
+    ${lnk_dirs}
 )
 
 target_link_libraries(OpenGL_Playground
