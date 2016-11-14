@@ -1,12 +1,10 @@
 #!/bin/bash
 # This shell script will do a normal build. If there is no build directory,
-# It will execute clean_build.sh
-
-# Execute a clean build if build directory does not exist.
+# it will execute clean_build.sh
 
 # Exit if any command fails
 set -e
-# Check if build directory exists
+# Execute a clean build if build directory does not exist.
 if [ ! -d "build" ]; then
     ./clean_build.sh
     exit

@@ -1,6 +1,6 @@
 // Include Standard Libraries
-#include <stdlib.h>
-#include <stdio.h>
+//#include <stdlib.h>
+//#include <stdio.h>
 // Include standard headers
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,22 +12,31 @@ using namespace glm;
 
 #include <common/shader_v2.hpp>
 
-int main() {
+// Function to initialize GLFW
+int initGLFW() {
     // Initialize GLFW
     if (!glfwInit()) {
         fprintf(stderr, "Failed to initialize GLFW.\n");
         return -1;
     }
 
-    // 4x antialiasing
+    // GLFW settings
     glfwWindowHint(GLFW_SAMPLES, 4);
-    // Set to OpenGL 3.3
+    // Use OpenGL 3.3
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    // Extra for compatibility with MacOS
+    // Extra compatibility for macOS
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     // No old OpenGL
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    return 0;
+}
+
+int main() {
+    // Initialize GLFW
+    if (initGLFW() == -1) {
+        return -1;
+    }
 
     // Create window
     GLFWwindow* window;
