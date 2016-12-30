@@ -1,0 +1,10 @@
+Control Flow:
+/       => Master page, shows the maze currently
+/join   => Join as a new player, returns the player number
+/leave/# => remove player, # is the player number
+
+/maze   => Send data here to receive the maze back
+           POST params:
+                player_no
+                moves
+           GET returns the maze

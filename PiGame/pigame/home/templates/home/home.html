@@ -2,6 +2,24 @@
 
 {% block title %}Home{% endblock %}
 
-{% block body %}
+{% block head %}
+{% load static %}
+<script src="{% static 'home/js/home.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'home/css/home.css' %}"/>
+{% endblock %}
 
+{% block body %}
+<div class="container">
+<section id="maze">
+    <table>
+        {% for y in breadth %}
+        <tr class="row">
+            {% for x in length %}
+            <td class="col box"></td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+</div>
 {% endblock %}
