@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^maze/', include('maze.urls')),
     url(r'^', include('home.urls')),
+    url(r'^', include('players.urls')),
 ]

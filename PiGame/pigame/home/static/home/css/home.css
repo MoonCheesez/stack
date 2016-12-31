@@ -1,5 +1,6 @@
 body {
-    background-color: black;
+    background-color: #010101;
+    color: white;
 }
 
 .col {
@@ -24,22 +25,30 @@ section#maze table {
     display: inline-block;
 }
 
+#current_move {
+    text-align: center;
+}
+
 .box#player1 {
-    background-color: #263D4E;
+    background-color: #EB5153;
 }
 
 .box#player2 {
-    background-color: #918E45;
+    background-color: #FBE230;
 }
 
 .box#player3 {
-    background-color: #4A6B4E;
+    background-color: #A1E736;
 }
 
 .box#player4 {
-    background-color: #D9983E;
+    background-color: #7B9EF8;
 }
 
-/*.box#showmaze {
+.box#showmaze {
     background-color: white;
-}*/
+}
+
+div#waiting {
+    text-align: center;
+}

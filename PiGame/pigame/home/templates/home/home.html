@@ -4,22 +4,40 @@
 
 {% block head %}
 {% load static %}
+{% if players_left == 0 %}
 <script src="{% static 'home/js/home.js' %}"></script>
+{% else %}
+<script src="{% static 'home/js/home_waiting.js' %}"></script>
+{% endif %}
 <link rel="stylesheet" type="text/css" href="{% static 'home/css/home.css' %}"/>
 {% endblock %}
 
 {% block body %}
+{% if players_left == 0 %}
 <div class="container">
-<section id="maze">
-    <table>
-        {% for y in breadth %}
-        <tr class="row">
-            {% for x in length %}
-            <td class="col box"></td>
-            {% endfor %}
-        </tr>
-        {% endfor %}
-    </table>
-</section>
+	<section id="maze">
+	    <table>
+	        {% for y in breadth %}
+	        <tr class="row">
+	            {% for x in length %}
+	            <td class="col box"></td>
+	            {% endfor %}
+	        </tr>
+	        {% endfor %}
+	    </table>
+    </section>
+    <h2 id="current_move"></h2>
 </div>
+{% else %}
+<div class="container" id="waiting">
+	<h1>Waiting for {{ players_left }} more player{{ players_left|pluralize }}...</h1>
+
+	<div class="container">
+		<h2><i>"{{ quote }}"</i></h2>
+	</div>
+</div>
+
+
+{% endif %}
+
 {% endblock %}
