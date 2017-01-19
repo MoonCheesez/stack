@@ -18,4 +18,6 @@ suites:
   - name: default
     run_list:
         - recipe[django::default]
+        - recipe[nginx::default]
+        - recipe[uwsgi::default]
     attributes:

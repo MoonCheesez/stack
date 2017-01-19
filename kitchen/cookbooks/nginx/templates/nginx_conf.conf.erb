@@ -1,0 +1,22 @@
+# Upstream component
+upstream django {
+    server unix://<%= @socket %>;
+}
+
+# Server config
+server {
+    listen      80;
+    server_name <%= node['ipaddress'] %>;
+    charset     utf-8;
+
+    client_max_body_size 75M;
+
+    location /static {
+        alias <%= @static_directory %>;
+    }
+
+    location / {
+        uwsgi_pass  django;
+        include     <%= @uwsgi_params %>;
+    }
+}

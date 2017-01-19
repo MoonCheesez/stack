@@ -1,0 +1,10 @@
+[uwsgi]
+
+chdir = <%= @base_directory %>
+wsgi-file = <%= @wsgi_file %>
+home = <%= @home_directory %>
+
+master = true
+processes = 10
+socket = <%= @socket %>
+vacuum = true

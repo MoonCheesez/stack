@@ -4,30 +4,32 @@
 #
 # Copyright:: 2017, The Authors, All Rights Reserved.
 
+name = node.default['django']['project_name']
+venv = node.default['django']['virtual_env']
 # Create the environment directory
-directory "#{}/#{}/#{}" do
+directory "#{venv}/#{name}/#{name}" do
     recursive true
 end
 
 # Add manage.py
-template "#{}/#{}/manage.py" do
+template "#{venv}/#{name}/manage.py" do
     source 'manage.py.erb'
-    variabes project: "#{}"
+    variables project: "#{name}"
 end
 
 # Setting files
 ['settings.py', 'urls.py', 'wsgi.py'].each do |setting_file|
-    template "#{}/#{}/#{}/#{}" do
+    template "#{venv}/#{name}/#{name}/#{setting_file}" do
         source "#{setting_file}.erb"
-        variables project: "#{}"
+        variables project: "#{name}"
     end
 end
 
 # Create __init__.py file
-file "#{}/#{}/#{}/__init__.py"
+file "#{venv}/#{name}/#{name}/__init__.py"
 
 # Change permissions
 execute "chown-venv" do
-    command "chown -R vagrant:vagrant #{}"
+    command "chown -R vagrant:vagrant #{venv}"
     user 'root'
 end
