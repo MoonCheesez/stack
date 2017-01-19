@@ -16,6 +16,7 @@ python_package 'Django' do
     version '1.10'
 end
 
+include_recipe 'startproject'
 # Create files
 # Create the directory for the django project
 directory "#{virtual_environment}/#{project_name}/#{project_name}" do
