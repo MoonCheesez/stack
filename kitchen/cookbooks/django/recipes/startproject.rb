@@ -27,9 +27,3 @@ end
 
 # Create __init__.py file
 file "#{venv}/#{name}/#{name}/__init__.py"
-
-# Change permissions
-execute "chown-venv" do
-    command "chown -R vagrant:vagrant #{venv}"
-    user 'root'
-end

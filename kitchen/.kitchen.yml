@@ -10,14 +10,14 @@ platforms:
   - name: centos-7.2
   - name: debian-8.6
     driver:
-        network:
-            - ["private_network", {ip: "192.168.33.7"}]
+      network:
+        - ["private_network", {ip: "192.168.33.7"}]
 
 
 suites:
   - name: default
     run_list:
-        - recipe[django::default]
-        - recipe[nginx::default]
-        - recipe[uwsgi::default]
+      - recipe[django::default]
+      - recipe[uwsgi::default]
+      #- recipe[nginx::default]
     attributes:

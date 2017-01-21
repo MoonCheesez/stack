@@ -37,17 +37,27 @@ cookbook_file uwsgi_params do
     source 'uwsgi_params'
 end
 
-# uwsgi conf
-template "/etc/init/#{name}.conf" do
-    source 'uwsgi_service.conf.erb'
-    variables({
-        project_name: name,
-        virtual_env: venv
-    })
+# Change permissions
+user = node.default['django']['user']
+group = node.default['django']['group']
+venv = node.default['django']['virtual_env']
+execute "chown-venv" do
+    command "chown -R #{user}:#{group} #{venv}"
+    user 'root'
 end
 
-service "#{name}" do
-    provider Chef::Provider::Service::Upstart
-    supports status: true, restart: true, reload: true
-    action [:enable, :start]
-end
+
+# # uwsgi conf
+# template "/etc/init/#{name}.conf" do
+#     source 'uwsgi_service.conf.erb'
+#     variables({
+#         project_name: name,
+#         virtual_env: venv
+#     })
+# end
+
+# service "#{name}" do
+#     provider Chef::Provider::Service::Upstart
+#     supports status: true, restart: true, reload: true
+#     action [:enable, :start]
+# end
