@@ -6,8 +6,6 @@
 
 python_runtime '3'
 
-python_virtualenv node.default['django']['virtual_env']
-
 python_package 'Django' do
     version '1.10'
 end
