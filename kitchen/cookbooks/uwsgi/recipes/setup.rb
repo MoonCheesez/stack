@@ -6,6 +6,4 @@
 
 python_runtime '3'
 
-python_package 'uwsgi' do
-	python '3'
-end
+package 'uwsgi'
