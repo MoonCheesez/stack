@@ -20,7 +20,7 @@ template "/etc/uwsgi/apps-enabled/#{project_name}.ini" do
     variables({
         base_directory: "#{env}/#{project_name}",
         wsgi_file: "#{env}/#{project_name}/#{project_name}/wsgi.py",
-        socket: ":8000",#"/tmp/uwsgi.socket",
+        socket: "/tmp/uwsgi.socket",
         home_directory: env
     })
 end

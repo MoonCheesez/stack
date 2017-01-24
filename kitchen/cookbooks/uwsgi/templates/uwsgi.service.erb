@@ -2,9 +2,9 @@
 Description=uWSGI instance to serve <%= @project_name %>
 
 [Service]
-User=root
-Group=root
 ExecStart=/bin/bash -c 'uwsgi --ini /etc/uwsgi/apps-enabled/<%= @project_name %>.ini'
+ExecStop= kill -INT `cat /run/uwsgi.pid`
+PIDFile = /run/uwsgi.pid
 
 [Install]
 WantedBy=multi-user.target

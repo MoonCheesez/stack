@@ -17,7 +17,8 @@ platforms:
 suites:
   - name: default
     run_list:
+      - recipe[apt]
       - recipe[django::default]
       - recipe[uwsgi::default]
-      #- recipe[nginx::default]
+      - recipe[nginx::default]
     attributes:

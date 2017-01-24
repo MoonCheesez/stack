@@ -7,6 +7,7 @@ plugins = python3
 chdir = <%= @base_directory %>
 wsgi-file = <%= @wsgi_file %>
 
+chmod-socket = 666
 master = true
 processes = 10
 socket = <%= @socket %>
