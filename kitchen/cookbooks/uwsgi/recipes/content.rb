@@ -15,11 +15,12 @@ directory "#{env}/#{project_name}/.uwsgi/" do
 end
 
 # uwsgi ini
-template "#{env}/#{project_name}/.uwsgi/#{project_name}.ini" do
+template "/etc/uwsgi/apps-enabled/#{project_name}.ini" do
     source 'uwsgi.ini.erb'
     variables({
         base_directory: "#{env}/#{project_name}",
         wsgi_file: "#{env}/#{project_name}/#{project_name}/wsgi.py",
+        socket: ":8000",#"/tmp/uwsgi.socket",
         home_directory: env
     })
 end

@@ -1,8 +1,11 @@
 [uwsgi]
+module = wsgi
+
+plugins-dir=/usr/lib/uwsgi/plugins/
+plugins = python3
 
 chdir = <%= @base_directory %>
 wsgi-file = <%= @wsgi_file %>
-home = <%= @home_directory %>
 
 master = true
 processes = 10

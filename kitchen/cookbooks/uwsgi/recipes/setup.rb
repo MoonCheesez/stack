@@ -7,3 +7,4 @@
 python_runtime '3'
 
 package 'uwsgi'
+package 'uwsgi-plugin-python3'
